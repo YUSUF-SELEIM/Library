@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="./css/main.css" />
+		<link rel="icon" type="image/png" href="./assets/books.png" />
+		<script src="./script.js" defer></script>
+		<script src="./darkmode.js" defer></script>
+		<script>
+			// On page load or when changing themes, best to add inline in `head` to avoid FOUC
+			if (
+				localStorage.getItem("color-theme") === "dark" ||
+				(!("color-theme" in localStorage) &&
+					window.matchMedia("(prefers-color-scheme: dark)").matches)
+			) {
+				document.documentElement.classList.add("dark");
+			} else {
+				document.documentElement.classList.remove("dark");
+			}
+		</script>
+		<title>Library</title>
+	</head>
+	<body class="flex flex-col bg-gray-100 dark:bg-gray-600">
+		<header
+			class="flex flex-row justify-between p-6 bg-gray-300 dark:bg-gray-800 shadow-2xl">
+			<h1 class="text-black font-extrabold text-3xl dark:text-white">
+				📚 LiBrArY 📚
+			</h1>
+			<button
+				id="theme-toggle"
+				type="button"
+				class="text-gray-500 dark:text-gray-400 hover:animate-spin focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
+				<svg
+					id="theme-toggle-dark-icon"
+					class="hidden w-5 h-5"
+					fill="currentColor"
+					viewBox="0 0 20 20"
+					xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+				</svg>
+				<svg
+					id="theme-toggle-light-icon"
+					class="hidden w-5 h-5"
+					fill="currentColor"
+					viewBox="0 0 20 20"
+					xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+						fill-rule="evenodd"
+						clip-rule="evenodd"></path>
+				</svg>
+			</button>
+		</header>
+		<button
+			id="add-button"
+			type="button"
+			class="fixed bottom-0 right-0 m-4 text-black border border-black hover:border-2 font-medium rounded-full text-sm p-2 text-center inline-flex items-center dark:text-white dark:border-white">
+			<svg
+				height="30px"
+				width="30px"
+				version="1.1"
+				id="Layer_1"
+				xmlns="http://www.w3.org/2000/svg"
+				xmlns:xlink="http://www.w3.org/1999/xlink"
+				viewBox="0 0 495 495"
+				xml:space="preserve">
+				<polygon
+					style="fill: currentColor"
+					points="495,227.5 267.5,227.5 267.5,0 227.5,0 227.5,227.5 0,227.5 0,267.5 227.5,267.5 227.5,495 
+	267.5,495 267.5,267.5 495,267.5 " />
+			</svg>
+		</button>
+
+		<section class="h-screen">
+			<div
+				id="books-grid"
+				class="h-full grid grid-cols-3 gap-6 p-12 justify-center justify-items-center dark:text-white dark:bg-gray-600"></div>
+			<div class="flex flex-col justify-center items-center">
+				<form
+					id="input-overlay"
+					class="w-max h-[400px] hidden flex flex-col justify-between items-center rounded-lg z-2 fixed -mt-44 top-[50%] bottom-[50%] shadow-xl p-8 py-4 bg-gray-300 dark:bg-gray-800 md:visible">
+					<div class="w-full flex flex-row justify-between">
+						<span class="text-black font-extrabold text-xl dark:text-white"
+							>Add a New Book</span
+						>
+						<button
+							id="close-button"
+							type="button"
+							class="text-black font-medium rounded-full text-sm text-center inline-flex items-center dark:text-white">
+							<svg
+								fill="currentColor"
+								height="15px"
+								width="15px"
+								version="1.1"
+								id="Capa_1"
+								xmlns="http://www.w3.org/2000/svg"
+								xmlns:xlink="http://www.w3.org/1999/xlink"
+								viewBox="0 0 460.775 460.775"
+								xml:space="preserve">
+								<path
+									d="M285.08,230.397L456.218,59.27c6.076-6.077,6.076-15.911,0-21.986L423.511,4.565c-2.913-2.911-6.866-4.55-10.992-4.55
+	c-4.127,0-8.08,1.639-10.993,4.55l-171.138,171.14L59.25,4.565c-2.913-2.911-6.866-4.55-10.993-4.55
+	c-4.126,0-8.08,1.639-10.992,4.55L4.558,37.284c-6.077,6.075-6.077,15.909,0,21.986l171.138,171.128L4.575,401.505
+	c-6.074,6.077-6.074,15.911,0,21.986l32.709,32.719c2.911,2.911,6.865,4.55,10.992,4.55c4.127,0,8.08-1.639,10.994-4.55
+	l171.117-171.12l171.118,171.12c2.913,2.911,6.866,4.55,10.993,4.55c4.128,0,8.081-1.639,10.992-4.55l32.709-32.719
+	c6.074-6.075,6.074-15.909,0-21.986L285.08,230.397z" />
+							</svg>
+						</button>
+					</div>
+					<div class="relative">
+						<input
+							type="text"
+							id="book-name"
+							class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-800 peer"
+							placeholder=" " />
+						<label
+							for="book-name"
+							class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-gray-800 peer-focus:dark:text-gray-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
+							>Book Name</label
+						>
+						<span id="show-error" class="text-red-700"></span>
+					</div>
+					<div class="relative">
+						<input
+							type="text"
+							id="book-author"
+							class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-800 peer"
+							placeholder=" " />
+						<label
+							for="book-author"
+							class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-gray-800 peer-focus:dark:text-gray-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
+							>Author</label
+						>
+					</div>
+					<div class="relative">
+						<input
+							type="number"
+							id="no-pages"
+							class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-800 peer"
+							placeholder=" " />
+						<label
+							for="no-pages"
+							class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-gray-800 peer-focus:dark:text-gray-700 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
+							>No. Pages</label
+						>
+					</div>
+					<label class="relative inline-flex items-center cursor-pointer">
+						<input
+							id="read-check"
+							value="off"
+							type="checkbox"
+							class="sr-only peer" />
+						<div
+							class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600"></div>
+						<span
+							class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+							>Read</span
+						>
+					</label>
+					<button
+						id="submit-button"
+						type="submit"
+						class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+						Submit
+					</button>
+				</form>
+			</div>
+		</section>
+		<script src="../path/to/flowbite/dist/flowbite.min.js"></script>
+	</body>
+</html>
