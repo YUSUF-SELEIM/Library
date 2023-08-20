@@ -42,12 +42,14 @@ submitButton.addEventListener("click", function (e) {
     }
 });
 
-function Book(name, author, noPages, isRead, drawn) {
-    this.name = name;
-    this.author = author;
-    this.noPages = noPages;
-    this.isRead = isRead;
-    this.drawn = false;
+class Book {
+    constructor(name, author, noPages, isRead, drawn) {
+        this.name = name;
+        this.author = author;
+        this.noPages = noPages;
+        this.isRead = isRead;
+        this.drawn = false;
+    }
 }
 
 function addBookToLibrary() {
