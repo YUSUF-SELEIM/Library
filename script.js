@@ -33,7 +33,6 @@ closeButton.addEventListener("click", function () {
 submitButton.addEventListener("click", function (e) {
 	e.preventDefault();
 	if (isAnyFieldEmpty()) {
-		console.log("hereerre");
 		showError.textContent = "Empty Fields are Not Allowed";
 		return;
 	}
@@ -77,7 +76,6 @@ function isDuplicate() {
 }
 
 function isAnyFieldEmpty() {
-	console.log("here");
 	return bookName.value == "" || bookAuthor.value == "" || noPages.value == "";
 }
 
